@@ -1,0 +1,17 @@
+/*
+DROP DATABASE IF EXISTS zay_schop;
+create DATABASE zay_schop;
+use zay_shop
+*/
+create table users(
+    /*id int AUTO_INCREMENT primary key,*/
+    name varchar(45) not null,
+    email varchar(45) not null primary key
+);
+create table posts(
+    name varchar(45) not null,
+    email varchar(45) not null,
+    subject varchar(75) not null,
+    message TEXT(500) not null
+    
+);
