@@ -1,17 +1,24 @@
-/*
-DROP DATABASE IF EXISTS zay_schop;
-create DATABASE zay_schop;
-use zay_shop
-*/
+DROP DATABASE IF EXISTS zay_shop;
+create DATABASE zay_shop;
+use zay_shop;
+
 create table users(
-    /*id int AUTO_INCREMENT primary key,*/
     name varchar(45) not null,
     email varchar(45) not null primary key
 );
 create table posts(
+    id int AUTO_INCREMENT primary key,
     name varchar(45) not null,
     email varchar(45) not null,
     subject varchar(75) not null,
     message TEXT(500) not null
-    
-);
+    );
+create table admins(
+    id int primary key,
+    login varchar(45) not null,
+    passwords varchar(75) not null
+ );
+insert into admins(login, passwords) values('Niekto1', 'Nejake_heslo1');
+insert into admins(id,login, passwords) values(1,'Niekto2', 'Nejake_heslo2');
+insert into admins(id,login, passwords) values(2,'Niekto3', 'Nejake_heslo3');
+insert into admins(id,login, passwords) values(3,'Niekto4', 'Nejake_heslo4');

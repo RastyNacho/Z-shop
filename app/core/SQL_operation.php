@@ -1,5 +1,5 @@
 <?php
-require_once('../config/Database.php');
+require_once __DIR__ . '/../../config/Database.php';
 class SQL_operation
 {
     private Database $database;
@@ -14,7 +14,6 @@ class SQL_operation
         try{
             if(!(empty($name)||empty($email)||empty($subject))){
                 
-                //$connection = $this->database->getConnection();
 
                 $sql = "INSERT INTO posts(name, email, subject, message) VALUES (:name, :email, :subject, :message)";
                 $command = $this->connection->prepare($sql);
@@ -29,16 +28,20 @@ class SQL_operation
             }
         }catch(PDOException $e){echo '<script type="text/javascript">console.log("'.$e.'");</script>';}
     }
-    public function readAll()
+    public function readAll($tablename) : ?array
     {
         if(!(empty($tablename))){
-            $sql = "SELECT * From :tablesname";
+            $sql = "SELECT * From $tablename";
             $command = $this->connection->prepare($sql);
-            $command->execute(['tablename' => $tablename]);
+            $command->execute();
 
             $data = $command->fetchAll(PDO::FETCH_ASSOC);
-            foreach($data as $row){echo $data;}
+            $lines = json_encode($data);
+            //echo ''.$lines.'';
+            //foreach($data as $row){echo $data;}
+            return $data;
         }
+        return null;
     }
     public function readFromSQL_user() : ?array{
         try{
@@ -48,7 +51,7 @@ class SQL_operation
             $sql = "select * From users ;";
             $command = $this->connection->query($sql);
             $user = $command->fetchAll(PDO::FETCH_ASSOC);
-            foreach($user as $row){echo "Name: " . $user['name'] . " - Email: " . $user['email'] . "<br>";}
+            //foreach($user as $row){echo "Name: " . $user['name'] . " - Email: " . $user['email'] . "<br>";}
             return $user;
                 
             
@@ -61,29 +64,31 @@ class SQL_operation
             $sql = "select * From posts ;";
             $command = $this->connection->query($sql);
             $post = $command->fetchAll(PDO::FETCH_ASSOC);
-            foreach($post as $row){echo "Name: " . $post['name'] . " - Email: " . $post['email'] . " - Subject: " . $post['subject'] ." - Message: " . $post['message'] ."<br>";}
+            foreach($post as $row){echo "ID: " . $post['id'] ." - Name: " . $post['name'] . " - Email: " . $post['email'] . " - Subject: " . $post['subject'] ." - Message: " . $post['message'] ."<br>";}
             return $post;
                 
             
         }catch(PDOException $e){echo '<script type="text/javascript">console.log("'.$e.'");</script>';}
         return null;
     }
-    public function updateSQL($table, $who, $what, $value) : void{
+    public function updateSQL($who, $what, $value) : void{
 
         try{
-            if($what == 'email'){echo '<script type="text/javascript">Alert("Email can not be updated");</script>';throw new Exception("Tried to change email");}
-            $sql = "UPDATE :tablename SET :what = :val WHERE email = :who ;";
+            
+            if(strtolower($what) == 'email'){echo '<script type="text/javascript">Alert("Email can not be updated");</script>';throw new Exception("Tried to change email");}
+            $sql = "UPDATE posts SET $what= :val WHERE id = :who ;";
             $command = $this->connection->prepare($sql);
-            $command->execute(['tablename' => $table, 'who'=> $who,'what'=> $what,'val'=> $value]);
-
+            $command->execute(['who'=> $who,'val'=> $value]);
             echo "Number of updated rows". $command->rowCount() ."<br>";
-        }catch(PDOException $e){echo '<script type="text/javascript">console.log("'.$e.'");</script>';}
-    }
-    public function deleteSQL($table, $who) : void{
-        $sql = "DELETE FROM :tablename WHERE email = :who ;";
-        $command = $this->connection->prepare($sql);
-        $command->execute(["tablename"=> $table,"who"=> $who]);
 
-        echo "Number of updated rows". $command->rowCount() ."<br>";
+        }
+        catch(PDOException $e){echo '<script type="text/javascript">console.log("'.$e.'");</script>';}
+    }
+    public function deletePost($id) : void{
+        $sql = "DELETE FROM posts WHERE id = :id ";
+        $command = $this->connection->prepare($sql);
+        $command->execute(["id"=> $id]);
+
+        //echo "Number of updated rows ". $command->rowCount() ."<br>";
     }
 }

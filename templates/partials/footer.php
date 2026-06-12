@@ -41,6 +41,7 @@
                         <li><a class="text-decoration-none" href="#">Shop Locations</a></li>
                         <li><a class="text-decoration-none" href="#">FAQs</a></li>
                         <li><a class="text-decoration-none" href="#">Contact</a></li>
+                        <li><a class="text-decoration-none" href="admin/login.php">Login as admin</a></li>
                     </ul>
                 </div>
 
@@ -72,6 +73,7 @@
                         <input type="text" class="form-control bg-dark border-light" id="subscribeEmail" placeholder="Email address">
                         <div class="input-group-text btn-success text-light">Subscribe</div>
                     </div>
+                    <label class="sr-only" for="subscribeEmail">Email address</label>
                 </div>
             </div>
         </div>

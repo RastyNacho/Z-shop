@@ -5,7 +5,7 @@
         exit();
     }
         */
-    include_once('core/SQL_operation.php');
+    require('core/SQL_operation.php');
     function saveMessage(){
         if ($_SERVER['REQUEST_METHOD'] === 'POST'){
             $name = $_POST['name']?? '';
@@ -27,7 +27,7 @@
             try{
                 $operation = new SQL_operation();
                 $operation->writeIntoSQL($name, $email, $subject, $message);
-            }catch(Exception $e){}
+            }catch(Exception $e){echo '<script type="text/javascript">alert("'.$e.'")</script>';}
 
 
             $userinfo = "_____________" . PHP_EOL;
