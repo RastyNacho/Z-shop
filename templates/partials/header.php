@@ -1,5 +1,4 @@
-<?php
-include  '../app/functions.php';?>
+
 <nav class="navbar navbar-expand-lg navbar-light shadow">
         <div class="container d-flex justify-content-between align-items-center">
 

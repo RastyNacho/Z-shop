@@ -53,7 +53,7 @@ https://templatemo.com/tm-559-zay-shop
     <!-- Header -->
     <?php
     include '../partials/header-admin.php';
-    include __DIR__ .'/../../app/core/SQL_operation.php';
+    include_once __DIR__ .'/../../app/core/SQL_operation.php';
     $SQL = new SQL_operation() ;
     $posts = $SQL->readAll('posts');
     $users = $SQL->readAll('users');
@@ -64,7 +64,7 @@ https://templatemo.com/tm-559-zay-shop
         <div class="row py-5">
             <form class="col-md-9 m-auto" method="post" role="form">
                 <div class="row">
-                    <div class="form-group col-md-6 mb-3">
+                    <div class="form-group col-md-8 mb-5">
                         <label for="inputname">Posts:</label>
                         <table>
                           <tr>
@@ -73,20 +73,65 @@ https://templatemo.com/tm-559-zay-shop
                             <th>Mail</th>
                             <th>Subject</th>
                             <th>Message</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
                           </tr>
-                          <?php 
-
+                          <?php  
+                            //require_once __DIR__ .'/../../app/core/SQL_postsTabObject.php';                           
                             foreach ($posts as $post) { 
                             ?>
                                 <tr>
-                                    <td><?php echo htmlspecialchars($post['id']); ?></td>
-                                    <td><?php echo htmlspecialchars($post['name']); ?></td>
-                                    <td><?php echo htmlspecialchars($post['email']); ?></td>
-                                    <td><?php echo htmlspecialchars($post['subject']); ?></td>
-                                    <td><?php echo htmlspecialchars($post['message']); ?></td>
+                                    <td><?php $ID = $post['id']; echo htmlspecialchars($ID);?></td>
+                                    <td><?php $NAME = $post['name']; echo htmlspecialchars($NAME); ?></td>
+                                    <td><?php $EMAIL = $post['email']; echo htmlspecialchars($EMAIL); ?></td>
+                                    <td><?php $SUBJECT = $post['subject']; echo htmlspecialchars($SUBJECT); ?></td>
+                                    <td><?php $MESSAGE = $post['message']; echo htmlspecialchars($MESSAGE); ?></td>
+                                    <td style="">
+                                        <form action="" method="POST">
+                                            <button type="submit" name="tab_update" style="background-color: #59ab6e;">Update</button>
+                                            <input type="hidden" name="post_id_edit" value="<?php echo $ID; ?>">
+                                            <div id="edit_form" style="display: block;">
+                                                
+                                                <label for="inputemail">Name:</label>
+                                                <input type="text" class="form-control mt-1" id="change_name" name="change_name" value="<?php echo $NAME; ?>" placeholder="Name">
+                                                <label for="inputemail">Subject:</label>
+                                                <input type="text" class="form-control mt-1" id="change_subject" name="change_subject" value="<?php echo $SUBJECT; ?>" placeholder="Subject">
+                                                <label for="inputemail">Message:</label>
+                                                <input type="text" class="form-control mt-1" id="change_message" name="change_message" value="<?php echo $MESSAGE;/*prec*/  ?>" placeholder="Message">
+                                            </div>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <form action="" method="POST">
+                                            <input type="hidden" name="post_id" value="<?php echo $ID; ?>">
+                                            <button type="submit" name="tab_delete" style="background-color: #59ab6e;">Delete</button>            
+                                        </form>
+                                    </td>                              
                                 </tr>
                             <?php 
                             } 
+                            
+                            if (isset($_POST['tab_delete'])) {
+                                try {
+                                    $id = (int)$_POST['post_id'];
+                                    $dbOperation = new SQL_operation();
+                                    $dbOperation->deletePost($id);
+                                }
+                                catch (Exception $e) {
+                                    echo '<script>console.log('.$e->getMessage().');</script>';
+                                }
+                            } 
+                            if(isset($_POST['tab_update']) && $_SERVER['REQUEST_METHOD'] === 'POST'){
+
+                                $id = (int)$_POST['post_id_edit'];
+                                $name  = trim($_POST['change_name']);
+                                $Subject = trim($_POST['change_subject']);
+                                $Message = trim($_POST['change_message']);
+
+                                $dbOperation = new SQL_operation(); 
+                                $dbOperation->updateSQL($id, $name, $Subject, $Message);
+                                
+                            }                                                      
                             ?>
                         </table>                           
                     
@@ -95,6 +140,7 @@ https://templatemo.com/tm-559-zay-shop
                           <tr>
                             <th>Name</th>
                             <th>Email</th>
+                            <th>Delete</th>
                           </tr>
                           <?php 
                             foreach ($users as $user) { 
@@ -102,56 +148,27 @@ https://templatemo.com/tm-559-zay-shop
                             <tr>
                               <td><?php echo htmlspecialchars($user['name']); ?></td>
                               <td><?php echo htmlspecialchars($user['email']); ?></td>
+                              <td>
+                                <form method="post" style="display: inline;">
+                                  <input type="hidden" name="user_id" value="<?php echo $user['email']; ?>">
+                                  <button type="submit" name="user_delete" style="background-color: #dc3545; color: white; border: none; padding: 5px 10px; cursor: pointer;">Delete</button>
+                                </form>
+                              </td>
                             </tr>
                           <?php 
-                            } 
+                            }
+                            if (isset($_POST['user_delete'])) {
+                                try {
+                                    $email = $_POST['user_id'];
+                                    $dbOperation = new SQL_operation();
+                                    $dbOperation->deleteUSer($email);
+                                }
+                                catch (Exception $e) {
+                                    echo '<script>console.log('.$e->getMessage().');</script>';
+                                }
+                            }  
                           ?>
                         </table>
-                        <label for="inputemail">Edit Post:</label><br>
-                        <form action="" method="POST">
-                            <?php
-
-                                if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_update'])) {
-
-                                    $who   = trim($_POST['post_id']);
-                                    $what  = trim($_POST['column_name']);
-                                    $value = trim($_POST['new_value']);
-
-
-                                    $dbOperation = new SQL_operation(); 
-                                    $dbOperation->updateSQL($who, $what, $value);
-                                }
-                            ?>
-                            <label for="inputemail">ID:</label>
-                            <input type="text" class="form-control mt-1" id="id" name="post_id" placeholder="ID">
-                            <label for="inputemail">Edit collumn:</label>
-                            <input type="text" class="form-control mt-1" id="editCollumn" name="column_name" placeholder="Collumn">
-                            <label for="inputemail">Value:</label>
-                            <input type="text" class="form-control mt-1" id="value" name="new_value" placeholder="Value">
-                            <div class="col text-end mt-2">
-                                <button type="submit" class="btn btn-success btn-lg px-3">Edit</button>
-                            </div>
-                        </form>
-                        <label for="inputemail">Delete Post:</label>
-                        <?php
-
-                                if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_update'])) {
-
-                                    $who  = trim($_POST['delete_id']);
-
-                                    if(!empty($who)){
-                                        $dbOperation = new SQL_operation(); 
-                                        $dbOperation->deletePost($who);
-                                    }
-                                }
-                            ?>
-                        <form action="" method="POST">
-                            <label for="inputemail">ID:</label>
-                            <input type="text" class="form-control mt-1" id="id" name="delete_id" placeholder="ID">
-                            <div class="col text-end mt-2">
-                                <button type="submit" class="btn btn-success btn-lg px-3">Delete</button>
-                            </div>
-                        </form>
                     </div>
                 </div>
             </form>

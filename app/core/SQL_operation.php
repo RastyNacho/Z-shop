@@ -10,23 +10,18 @@ class SQL_operation
         $this->connection = $this->database->getConnection();
     }
 
-    public function writeIntoSQL($name, $email, $subject, $message){
-        try{
-            if(!(empty($name)||empty($email)||empty($subject))){
-                
-
-                $sql = "INSERT INTO posts(name, email, subject, message) VALUES (:name, :email, :subject, :message)";
-                $command = $this->connection->prepare($sql);
-                $command->execute(['name' => $name, 'email' => $email, 'subject' => $subject, 'message' => $message]);
-
-                
-                $sql = "INSERT INTO users(name, email) VALUES (:name, :email)";
-                $command = $this->connection->prepare($sql);
-                $command->execute(['name' => $name, 'email' => $email]);
-
-                
-            }
-        }catch(PDOException $e){echo '<script type="text/javascript">console.log("'.$e.'");</script>';}
+    public function writeIntoSQL($name, $email, $subject, $message){  
+        if(!(empty($name)||empty($email)||empty($subject))){
+            
+            $sql = "INSERT INTO posts(name, email, subject, message) VALUES (:name, :email, :subject, :message)";
+            $command = $this->connection->prepare($sql);
+            $command->execute(['name' => $name, 'email' => $email, 'subject' => $subject, 'message' => $message]);
+            
+            $sql = "INSERT INTO users(name, email) VALUES (:name, :email)";
+            $command = $this->connection->prepare($sql);
+            $command->execute(['name' => $name, 'email' => $email]);
+            
+        }
     }
     public function readAll($tablename) : ?array
     {
@@ -37,58 +32,24 @@ class SQL_operation
 
             $data = $command->fetchAll(PDO::FETCH_ASSOC);
             $lines = json_encode($data);
-            //echo ''.$lines.'';
-            //foreach($data as $row){echo $data;}
             return $data;
         }
         return null;
     }
-    public function readFromSQL_user() : ?array{
-        try{
-            
-                
-
-            $sql = "select * From users ;";
-            $command = $this->connection->query($sql);
-            $user = $command->fetchAll(PDO::FETCH_ASSOC);
-            //foreach($user as $row){echo "Name: " . $user['name'] . " - Email: " . $user['email'] . "<br>";}
-            return $user;
-                
-            
-        }catch(PDOException $e){echo '<script type="text/javascript">console.log("'.$e.'");</script>';}
-        return null;
-    }
-    public function readFromSQL_post() : ?array{
-        try{
-           
-            $sql = "select * From posts ;";
-            $command = $this->connection->query($sql);
-            $post = $command->fetchAll(PDO::FETCH_ASSOC);
-            foreach($post as $row){echo "ID: " . $post['id'] ." - Name: " . $post['name'] . " - Email: " . $post['email'] . " - Subject: " . $post['subject'] ." - Message: " . $post['message'] ."<br>";}
-            return $post;
-                
-            
-        }catch(PDOException $e){echo '<script type="text/javascript">console.log("'.$e.'");</script>';}
-        return null;
-    }
-    public function updateSQL($who, $what, $value) : void{
-
-        try{
-            
-            if(strtolower($what) == 'email'){echo '<script type="text/javascript">Alert("Email can not be updated");</script>';throw new Exception("Tried to change email");}
-            $sql = "UPDATE posts SET $what= :val WHERE id = :who ;";
-            $command = $this->connection->prepare($sql);
-            $command->execute(['who'=> $who,'val'=> $value]);
-            echo "Number of updated rows". $command->rowCount() ."<br>";
-
-        }
-        catch(PDOException $e){echo '<script type="text/javascript">console.log("'.$e.'");</script>';}
+    public function updateSQL($id, $name, $subject, $message) : void{
+         
+        $sql = "UPDATE posts SET name = :name, subject = :subject, message = :message WHERE id = :id";
+        $command = $this->connection->prepare($sql);
+        $command->execute(['id'=> $id, 'name'=> $name,'subject'=> $subject, 'message'=> $message]);
     }
     public function deletePost($id) : void{
         $sql = "DELETE FROM posts WHERE id = :id ";
         $command = $this->connection->prepare($sql);
         $command->execute(["id"=> $id]);
-
-        //echo "Number of updated rows ". $command->rowCount() ."<br>";
+    }
+    public function deleteUSer($email) : void{
+        $sql = "DELETE FROM users WHERE email = :email; DELETE FROM posts WHERE email = :email";
+        $command = $this->connection->prepare($sql);
+        $command->execute(["email"=> $email]);
     }
 }

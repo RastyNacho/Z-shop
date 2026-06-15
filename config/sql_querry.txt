@@ -22,3 +22,17 @@ insert into admins(login, passwords) values('Niekto1', 'Nejake_heslo1');
 insert into admins(id,login, passwords) values(1,'Niekto2', 'Nejake_heslo2');
 insert into admins(id,login, passwords) values(2,'Niekto3', 'Nejake_heslo3');
 insert into admins(id,login, passwords) values(3,'Niekto4', 'Nejake_heslo4');
+
+INSERT INTO posts(name, email, subject, message) VALUES ("User1", "user1@gmail.com", "Somesubject1", "Message1MessgaeMessageMessgaeMessgaeMessageMessgaeMessgaeMessageMessgae");
+INSERT INTO users(name, email) VALUES ("User1", "user1@gmail.com");
+INSERT INTO posts(name, email, subject, message) VALUES ("User1", "user1@gmail.com", "Somesubject2", "Message2MessgaeMessageMessgaeMessgaeMessageMessgae");
+INSERT INTO posts(name, email, subject, message) VALUES ("User2", "user2@gmail.com", "Somesubject3", "Message3MessgaeMessageMessgaeMessgaeMessageMessgaeMessgaeMessageMessgae");
+INSERT INTO users(name, email) VALUES ("User2", "user2@gmail.com");
+INSERT INTO posts(name, email, subject, message) VALUES ("User2", "user2@gmail.com", "Somesubject4", "Message4MessgaeMessageMessgaeMessgaeMessageMessgae");
+INSERT INTO posts(name, email, subject, message) VALUES ("User3", "user3@gmail.com", "Somesubject5", "Message5MessgaeMessageMessgaeMessgaeMessageMessgaeMessgaeMessageMessgaeMessgaeMessageMessgae");
+INSERT INTO users(name, email) VALUES ("User3", "user3@gmail.com");
+INSERT INTO posts(name, email, subject, message) VALUES ("User3", "user3@gmail.com", "Somesubject6", "Message6MessgaeMessageMessgaeMessgaeMessageMessgae");
+INSERT INTO posts(name, email, subject, message) VALUES ("User4", "user4@gmail.com", "Somesubject7", "Message7MessgaeMessageMessgaeMessgaeMessageMessgae");
+INSERT INTO users(name, email) VALUES ("User4", "user4@gmail.com");
+INSERT INTO posts(name, email, subject, message) VALUES ("User5", "user5@gmail.com", "Somesubject8", "Message8MessgaeMessageMessgaeMessgaeMessageMessgaeMessgaeMessageMessgae");
+INSERT INTO users(name, email) VALUES ("User5", "user5@gmail.com");
