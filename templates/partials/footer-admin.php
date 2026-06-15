@@ -41,7 +41,7 @@
                         <li><a class="text-decoration-none" href="#">Shop Locations</a></li>
                         <li><a class="text-decoration-none" href="#">FAQs</a></li>
                         <li><a class="text-decoration-none" href="#">Contact</a></li>
-                        <li><a class="text-decoration-none" href="admin/login.php">Log Out</a></li>
+                        <li><a class="text-decoration-none" href="login.php">Log Out</a></li>
                     </ul>
                 </div>
 

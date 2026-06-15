@@ -1,4 +1,15 @@
-
+<?php session_start(); 
+require_once __DIR__ . '/../../app/core/Redirect.php';
+$redirect = new Redirect('login.php');
+if(!isset($_SESSION["admin_logged_in"])){
+    $redirect->redirect();
+}
+if (isset($_POST['leave_admin'])) {
+    session_destroy();
+    $redirect->redirect();
+    exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -168,7 +179,10 @@ https://templatemo.com/tm-559-zay-shop
                                 }
                             }  
                           ?>
-                        </table>
+                        </table><br>
+                        <form method="post" style="display: inline;">
+                            <button type="submit" name="leave_admin" style="background-color: #dc3535; color: white; border: none; padding: 5px 10px; cursor: pointer;">Leave Admin</button>
+                        </form>
                     </div>
                 </div>
             </form>
@@ -177,7 +191,7 @@ https://templatemo.com/tm-559-zay-shop
 
 
     <?php
-    include '../partials/footer.php';
+    include '../partials/footer-admin.php';
         ?>
     <!-- End Footer -->
 

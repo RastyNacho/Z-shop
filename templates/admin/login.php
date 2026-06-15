@@ -23,8 +23,41 @@
 </head>
 <?php
     require_once __DIR__ . '/../../app/core/Redirect.php';
-    $redirect = new Redirect('home-admin.php');
-    $redirect->redirectAdmin();
+    include __DIR__ . '/../../app/core/SQL_operation.php';
+
+    session_start();
+    $adminPage = new Redirect('home-admin.php');
+    
+    $canOpen = false;
+    $database = new SQL_operation();    
+    $data = $database->readAll('admins');
+
+    $_SESSION['admin_logged_in'] = false;
+    $_SESSION['admin_username'] = '';
+    if ($_SERVER['REQUEST_METHOD'] === 'POST'){
+        $login = $_POST['login']?? '';
+        $password = $_POST['password']?? '';
+        
+        if(empty($login)||empty($password)){
+            $alertmessage = "Not all fields are filled!";
+            echo '<script type="text/javascript">alert("'.$alertmessage.'")</script>';
+        }
+        foreach($data as $row){
+                if($row['login'] === $login && $row['passwords'] === $password){
+                    $canOpen = true;
+                    $_SESSION['admin_logged_in'] = true;
+                    $_SESSION['admin_username'] = $username;
+                break;
+            }            
+        } 
+        if($_SESSION['admin_logged_in'] === true){$adminPage->redirect();} 
+        else{
+            $alertmessage = "Incorrect login or password!";
+            echo '<script type="text/javascript">alert("'.$alertmessage.'")</script>';
+        }    
+    } 
+      
+    
 ?>
 <body>
    
@@ -45,6 +78,15 @@
                         <button type="submit" class="btn btn-success btn-lg px-3">Log as admin</button>
                     </div>
                 </div>
+            </form>
+            <form class="col-md-9 m-auto" method="post" role="form">
+                <div class="col text-end mt-2">
+                    <button type="submit" name="back_to_shop" class="btn btn-success btn-lg px-3">Back to shop</button>
+                </div>
+                <?php if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['back_to_shop'])) {
+                    $homePage = new Redirect('../../index.php');
+                    $homePage->redirect();
+                } ?>
             </form>
         </div>
     </div>
